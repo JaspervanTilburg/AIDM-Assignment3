@@ -66,8 +66,12 @@ public class Homework {
 		CMDP[] cmdps = new CMDP[]{cmdp};
 		
 		// Assign cost
-		cmdp.assignCost(0, 0, 0); // TODO add costs to the state action pairs
-		
+		for (int s = 0; s < cmdp.getNumStates(); s++) {
+			for (int a = 0; a < cmdp.getNumActions(); a++) {
+				cmdp.assignCost(s, a, 2*a);
+			}
+		}
+
 		// Solve the problem without constraints
 		PlanningAlgorithm alg = new PlanningAlgorithm();
 		Solution solution = alg.solveUnconstrained(cmdps);
@@ -100,7 +104,11 @@ public class Homework {
 		CMDP[] cmdps = new CMDP[]{cmdp};
 		
 		// Assign cost
-		cmdp.assignCost(0, 0, 0); // TODO add costs to the state action pairs
+		for (int s = 0; s < cmdp.getNumStates(); s++) {
+			for (int a = 0; a < cmdp.getNumActions(); a++) {
+				cmdp.assignCost(s, a, 2*a);
+			}
+		}
 		
 		PlanningAlgorithm alg = new PlanningAlgorithm();
 		Solution solution = alg.solve(cmdps, 20.0);
@@ -117,10 +125,18 @@ public class Homework {
 		CMDP cmdpAdult = UserGenerator.getCMDPAdult();
 		
 		// Assign cost to child
-		cmdpChild.assignCost(0, 0, 0); // TODO add costs to the state action pairs
+		for (int s = 0; s < cmdpChild.getNumStates(); s++) {
+			for (int a = 0; a < cmdpChild.getNumActions(); a++) {
+				cmdpChild.assignCost(s, a, 2*a);
+			}
+		}
 		
 		// Assign cost to adult
-		cmdpAdult.assignCost(0, 0, 0); // TODO add costs to the state action pairs
+		for (int s = 0; s < cmdpAdult.getNumStates(); s++) {
+			for (int a = 0; a < cmdpAdult.getNumActions(); a++) {
+				cmdpAdult.assignCost(s, a, 2*a);
+			}
+		}
 		
 		PlanningAlgorithm alg = new PlanningAlgorithm();
 		Simulator sim = new Simulator(rnd);
@@ -171,6 +187,8 @@ public class Homework {
 	}
 	
 	public static void main(String[] args) {
-		task1();
+//		task0();
+//		task1();
+		task2();
 	}
 }
