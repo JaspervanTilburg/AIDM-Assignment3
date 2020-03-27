@@ -109,13 +109,13 @@ public class Homework {
 				cmdp.assignCost(s, a, 2*a);
 			}
 		}
-		
+
 		PlanningAlgorithm alg = new PlanningAlgorithm();
-		Solution solution = alg.solve(cmdps, 20.0);
-		double expectedReward = solution.getExpectedReward();
-		System.out.println("Expected reward budget 20: "+expectedReward);
-		
-		// TODO print expected reward as function of cost limit L
+		for (int budget = 0; budget <= 50; budget += 5) {
+            Solution solution = alg.solve(cmdps, budget);
+            double expectedReward = solution.getExpectedReward();
+            System.out.println("Expected reward budget " + budget + ": " + expectedReward);
+        }
 	}
 	
 	// Solve constrained problem for 2 agents with trivial budget split
@@ -189,6 +189,7 @@ public class Homework {
 	public static void main(String[] args) {
 //		task0();
 //		task1();
-		task2();
+//		task2();
+		task3();
 	}
 }
