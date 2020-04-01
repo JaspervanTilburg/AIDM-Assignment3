@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.*;
 
 
 public class Homework {
@@ -171,7 +172,7 @@ public class Homework {
 		}
 		System.out.println("Expected reward: "+expectedReward);
 		System.out.println("Expected cost: "+expectedCost);
-		
+
 		// multi-agent problem: invest 20 in total
 		Solution combinedSolution = alg.solve(new CMDP[]{cmdpChild, cmdpAdult}, budget);
 		System.out.println();
@@ -182,9 +183,84 @@ public class Homework {
 		System.out.println("Expected cost total: "+combinedSolution.getExpectedCost());
 		System.out.println("Expected cost agent 0: "+combinedSolution.getExpectedCost(0));
 		System.out.println("Expected cost agent 1: "+combinedSolution.getExpectedCost(1));
-		
+
 		// simulate
 		sim.simulate(new CMDP[]{cmdpChild, cmdpAdult}, combinedSolution, 10000);
+	}
+
+	public static void task5() {
+		// Only children
+		System.out.println("Experiment with varying number of children");
+		for (int i = 2; i <= 50; i++) {
+			runExperiment(i, 0, i*10);
+		}
+
+		// Only adults
+		System.out.println("Experiment with varying number of adults");
+		for (int i = 2; i <= 50; i++) {
+			runExperiment(0, i, i*10);
+		}
+
+		// Children and adults equally divided.
+		System.out.println("Experiment with equally divided number of children and adults");
+		for (int i = 1; i <= 25; i++) {
+			runExperiment(i, i, i*10);
+		}
+
+		// All compositions of 20 agents
+		System.out.println("Experiment with varying composition of children and adults");
+		for (int i = 0; i <= 20; i++) {
+			runExperiment(i, 20 - i, 200);
+		}
+	}
+
+	private static void runExperiment(int numChildAgents, int numAdultAgents, double L) {
+		CMDP[] agents = new CMDP[numChildAgents + numAdultAgents];
+
+		// Generate child users and assign costs
+		for (int i = 0; i < numChildAgents; i++) {
+			CMDP cmdpChild = UserGenerator.getCMDPChild();
+			agents[i] = cmdpChild;
+			for (int s = 0; s < cmdpChild.getNumStates(); s++) {
+				for (int a = 0; a < cmdpChild.getNumActions(); a++) {
+					cmdpChild.assignCost(s, a, 2*a);
+				}
+			}
+		}
+
+		// Generate adult users and assign costs
+		for (int i = 0; i < numAdultAgents; i++) {
+			CMDP cmdpAdult = UserGenerator.getCMDPAdult();
+			agents[numChildAgents + i] = cmdpAdult;
+			for (int s = 0; s < cmdpAdult.getNumStates(); s++) {
+				for (int a = 0; a < cmdpAdult.getNumActions(); a++) {
+					cmdpAdult.assignCost(s, a, 2*a);
+				}
+			}
+		}
+
+		// Setup the solver as a timed callable task
+		PlanningAlgorithm alg = new PlanningAlgorithm();
+		ExecutorService executor = Executors.newCachedThreadPool();
+		Callable<Object> task = () -> alg.solve(agents, L);
+		Future<Object> future = executor.submit(task);
+
+		// Try to run the solver task with a timeout of 1 minute.
+		try {
+			long start = System.currentTimeMillis();
+			Solution sol = (Solution) future.get(5, TimeUnit.MINUTES);
+			long end = System.currentTimeMillis();
+//			System.out.println("Expected reward: " + sol.getExpectedReward());
+//			System.out.println("Expected cost: " + sol.getExpectedCost());
+//			System.out.println("Runtime in ms: " + (end - start));
+			System.out.println((end - start));
+		} catch (TimeoutException ex) {
+			System.out.println("Timeout");
+		} catch (InterruptedException e) {
+			System.out.println("InterruptedException");
+		} catch (ExecutionException e) {
+			System.out.println("ExecutionException");
+		}
 	}
 	
 	public static void main(String[] args) {
@@ -192,6 +268,7 @@ public class Homework {
 //		task1();
 //		task2();
 //		task3();
-		task4();
+//		task4();
+		task5();
 	}
 }
