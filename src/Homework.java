@@ -140,6 +140,7 @@ public class Homework {
 		
 		PlanningAlgorithm alg = new PlanningAlgorithm();
 		Simulator sim = new Simulator(rnd);
+		double budget = 20;
 		
 		// Solve both problems separately without constraints and print expectations
 		System.out.println("=========== UNCONSTRAINED ===========");
@@ -155,12 +156,12 @@ public class Homework {
 		// trivial budget split: invest 10 in each agent
 		System.out.println();
 		System.out.println("=========== SEPARATE PLANNING ===========");
-		
+
 		double expectedReward = 0.0;
 		double expectedCost = 0.0;
 		for(int i=0; i<2; i++) {
 			CMDP cmdp = (i==0) ? cmdpChild : cmdpAdult;
-			Solution sol = alg.solve(new CMDP[]{cmdp}, 99999.0); // TODO replace the number with the correct limit
+			Solution sol = alg.solve(new CMDP[]{cmdp}, budget/2);
 			double expectedReward0 = sol.getExpectedReward();
 			double expectedCost0 = sol.getExpectedCost();
 			System.out.println("Expected reward agent "+i+": "+expectedReward0);
@@ -172,7 +173,7 @@ public class Homework {
 		System.out.println("Expected cost: "+expectedCost);
 		
 		// multi-agent problem: invest 20 in total
-		Solution combinedSolution = alg.solve(new CMDP[]{cmdpChild, cmdpAdult}, 99999.0); // TODO replace the number with the correct limit
+		Solution combinedSolution = alg.solve(new CMDP[]{cmdpChild, cmdpAdult}, budget);
 		System.out.println();
 		System.out.println("=========== MULTI-AGENT PLANNING ===========");
 		System.out.println("Expected reward: "+combinedSolution.getExpectedReward());
@@ -190,6 +191,7 @@ public class Homework {
 //		task0();
 //		task1();
 //		task2();
-		task3();
+//		task3();
+		task4();
 	}
 }
