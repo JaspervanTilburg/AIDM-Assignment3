@@ -174,20 +174,19 @@ public class PlanningAlgorithm {
 	
 	public Solution solveVI(CMDP[] cmdps, double discountFactor) {
 		CMDP cmdp = cmdps[0];
-		
 
-		// TODO compute an optimal value function for the cmdp object
+
 		double[] V = new double[cmdp.getNumStates()];
 		double[][] Q = valueIteration(discountFactor, cmdp);
 
-		// TODO fill the policy array with probabilities
 		double[][] policy = new double[cmdp.getNumStates()][cmdp.getNumActions()];
 		for (int s = 0; s < cmdp.getNumStates(); s++) {
 			int bestAction = maxIndex(Q[s]);
+			V[s] = max(Q[s]);
 			policy[s][bestAction] = 1;
 		}
 
-		ArrayList<double[][]> policies = new ArrayList<double[][]>();
+		ArrayList<double[][]> policies = new ArrayList<>();
 		policies.add(policy);
 		
 		double expectedReward = V[cmdp.getInitialState()];
