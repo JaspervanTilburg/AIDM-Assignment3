@@ -209,8 +209,8 @@ public class Homework {
 
 		// All compositions of 20 agents
 		System.out.println("Experiment with varying composition of children and adults");
-		for (int i = 0; i <= 20; i++) {
-			runExperiment(i, 20 - i, 200);
+		for (int i = 0; i <= 50; i++) {
+			runExperiment(i, 50 - i, 200);
 		}
 	}
 
@@ -245,15 +245,14 @@ public class Homework {
 		Callable<Object> task = () -> alg.solve(agents, L);
 		Future<Object> future = executor.submit(task);
 
-		// Try to run the solver task with a timeout of 1 minute.
+		// Try to run the solver task with a timeout of 2 minutes
 		try {
 			long start = System.currentTimeMillis();
-			Solution sol = (Solution) future.get(5, TimeUnit.MINUTES);
+			Solution sol = (Solution) future.get(2, TimeUnit.MINUTES);
 			long end = System.currentTimeMillis();
-//			System.out.println("Expected reward: " + sol.getExpectedReward());
-//			System.out.println("Expected cost: " + sol.getExpectedCost());
-//			System.out.println("Runtime in ms: " + (end - start));
-			System.out.println((end - start));
+			System.out.println("Expected reward: " + sol.getExpectedReward());
+			System.out.println("Expected cost: " + sol.getExpectedCost());
+			System.out.println("Runtime in ms: " + (end - start));
 		} catch (TimeoutException ex) {
 			System.out.println("Timeout");
 		} catch (InterruptedException e) {
